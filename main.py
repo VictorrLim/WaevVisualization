@@ -106,7 +106,7 @@ def download_csv(url, filename):
 
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for error status codes (e.g., 404)
+        response.raise_for_status()
 
         with open(filename, 'wb') as f:
             f.write(response.content)
