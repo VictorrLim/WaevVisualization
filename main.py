@@ -1,6 +1,7 @@
 import csv
 import matplotlib.pyplot as plt
 from collections import Counter
+import requests
 
 def get_column_strings(csv_file, column_index):
     """
@@ -88,10 +89,32 @@ def plot_ev_car_brands_washington(data):
   if len(brands) > 5:
     plt.xticks(rotation=45)
 
-  
+
   plt.tight_layout()
   plt.show()
 
+def download_csv(url, filename):
+    """Downloads a CSV file from the specified URL and saves it locally.
+
+    Args:
+        url (str): The URL of the CSV file to download.
+        filename (str): The name to save the downloaded file as.
+
+    Raises:
+        requests.exceptions.RequestException: If there's an error during the download.
+    """
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for error status codes (e.g., 404)
+
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+
+    except requests.exceptions.RequestException as e:
+        raise ValueError(f"Error downloading file: {e}") from e
+
+download_csv("https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD", "Electric_Vehicle_Population_Data.csv")
 x = get_column_strings("Electric_Vehicle_Population_Data.csv", 6)
 y = string_counter(x)
 z = top_10(y)
